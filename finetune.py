@@ -17,8 +17,8 @@ from tqdm import tqdm
 import math
 import datetime
 
-import sys
-sys.path.append("/content")
+import distillm
+print(dir(distillm))  # Check if forward_kl is listed
 
 from transformers import (
     AutoModelForCausalLM,
