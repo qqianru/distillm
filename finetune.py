@@ -17,6 +17,9 @@ from tqdm import tqdm
 import math
 import datetime
 
+import sys
+sys.path.append("/content")
+
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
@@ -36,8 +39,6 @@ from utils import all_gather
 from utils import load_parallel, save_parallel
 from utils import get_tokenizer, get_model
 
-import sys
-print(sys.path)
 
 from distillm import forward_kl, reverse_kl, js_distance, tv_distance
 from distillm import skewed_forward_kl, skewed_reverse_kl
