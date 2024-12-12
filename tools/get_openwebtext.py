@@ -2,7 +2,7 @@ import datasets
 import os
 import re
 
-dataset = datasets.load_dataset('openwebtext', split='train')
+dataset = datasets.load_dataset('test.json', split='train')
 
 os.makedirs("data/openwebtext", exist_ok=True)
 
