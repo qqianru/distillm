@@ -4,7 +4,7 @@ import re
 
 print(os.listdir('/content/distillm'))
 
-dataset = datasets.load_dataset('/content/distillm/test.json', split='train')
+dataset = datasets.load_dataset('json', '/content/distillm/test.json', split='train')
 
 os.makedirs("data/openwebtext", exist_ok=True)
 
