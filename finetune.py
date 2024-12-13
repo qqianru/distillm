@@ -576,6 +576,8 @@ def main():
     
     # get the tokenizer
     tokenizer = get_tokenizer(args)
+    print("Tokenizer:", tokenizer)
+    print("Tokenizer Config:", tokenizer.__dict__)
     dataset = prepare_dataset(
         args,
         tokenizer,
