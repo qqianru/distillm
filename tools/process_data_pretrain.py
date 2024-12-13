@@ -37,7 +37,7 @@ def main():
     
     for line_num, line in enumerate(fin):
     # Debug: print out the raw line to see what’s being read
-     print(f"Debug: Raw line {line_num}:", repr(line)) 
+       print(f"Debug: Raw line {line_num}:", repr(line)) 
         
     # encoder use the tokenizer to encode data
     encoder = Encoder(args)
