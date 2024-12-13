@@ -43,12 +43,12 @@ def main():
     encoder = Encoder(args)
 
     encoder.initializer()  # Sets Encoder.tokenizer in the main process
-     for line_num, line in enumerate(fin):
-    # Debug: print out the raw line to see what’s being read
+    for line_num, line in enumerate(fin):
+        # Debug: print out the raw line to see what’s being read
         def encode_wrapper(line):
             print("Debug: About to encode line:", line)
-        return encoder.encode(line)
-    
+            return encoder.encode(line)
+  
     # 2. Mapping all datas with Encoder, with the help of multiprocessing
     pool = multiprocessing.Pool(processes=args.data_process_workers, initializer=encoder.initializer)
     encoded_docs = pool.imap_unordered(encoder.encode, fin, chunksize=50)
