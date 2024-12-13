@@ -21,7 +21,7 @@ class Encoder(object):
     def encode(self, line):
         line = line.replace("<@x(x!>", "\n")        
         token_ids = Encoder.tokenizer.encode(line, add_special_tokens=False) + [Encoder.tokenizer.eos_token_id]
-        
+        print("Debug: The length of this line is:", len(line))
         return token_ids, len(line)
 
 
