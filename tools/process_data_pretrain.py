@@ -42,6 +42,7 @@ def main():
     # encoder use the tokenizer to encode data
     encoder = Encoder(args)
 
+    encoder.initializer()  # Sets Encoder.tokenizer in the main process
     def encode_wrapper(line):
         print("Debug: About to encode line:", line)
     return encoder.encode(line)
