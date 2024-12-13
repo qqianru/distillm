@@ -43,7 +43,7 @@ def main():
         
     # encoder use the tokenizer to encode data
     encoder = Encoder(args)
-    encoder.initializer(()
+    encoder.initializer()
     fin.seek(0)
     for line_num, line in enumerate(fin):
         # Debug: print out the raw line to see what’s being read
