@@ -64,12 +64,12 @@ def main():
     buffer = []
     inst_num = 0
     for lid, (input_ids, bytes_processed) in enumerate(encoded_docs):
-        print("Encoded lid:", lid)
         total_bytes_processed += bytes_processed
         if input_ids is None:
             continue
         
         buffer.extend(input_ids)
+        print("buffer length:", len(buffer))
         while len(buffer) >= args.max_length:
             inst = buffer[:args.max_length]
             buffer = buffer[args.max_length:]
