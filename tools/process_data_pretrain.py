@@ -19,7 +19,7 @@ class Encoder(object):
         Encoder.tokenizer = AutoTokenizer.from_pretrained(self.args.model_path)
 
     def encode(self, line):
-        line = line.replace("<@x(x!>", "\n")
+        line = line.replace("<@x(x!>", "\n")        
         token_ids = Encoder.tokenizer.encode(line, add_special_tokens=False) + [Encoder.tokenizer.eos_token_id]
         
         return token_ids, len(line)
@@ -34,13 +34,10 @@ def main():
         
     file_name = os.path.join(args.data_dir, "data.txt")
     fin = open(file_name, "r", encoding="utf-8")
-
-    print(f"Reading data from: {args.data_dir}")
-    for idx, file in enumerate(os.listdir(args.data_dir)):
-       print(f"Processing file {idx + 1}: {file}")
-    with open(os.path.join(args.data_dir, file), 'r') as f:
-        raw_data = f.read()
-        print(f"Raw data (first 100 chars): {raw_data[:100]}")
+    
+    for line_num, line in enumerate(fin):
+    # Debug: print out the raw line to see what’s being read
+     print(f"Debug: Raw line {line_num}:", repr(line)) 
         
     # encoder use the tokenizer to encode data
     encoder = Encoder(args)
