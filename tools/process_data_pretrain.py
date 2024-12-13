@@ -64,6 +64,7 @@ def main():
     buffer = []
     inst_num = 0
     for lid, (input_ids, bytes_processed) in enumerate(encoded_docs):
+        print("Encoded lid:", lid)
         total_bytes_processed += bytes_processed
         if input_ids is None:
             continue
