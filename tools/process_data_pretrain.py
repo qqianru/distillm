@@ -17,6 +17,7 @@ class Encoder(object):
         
     def initializer(self):
         Encoder.tokenizer = AutoTokenizer.from_pretrained(self.args.model_path)
+        print("Debug: args.model_path =", args.model_path)
     # Rewind the file to the beginning
   
     def encode(self, line):
@@ -42,6 +43,7 @@ def main():
         
     # encoder use the tokenizer to encode data
     encoder = Encoder(args)
+    encoder.initializer(()
     fin.seek(0)
     for line_num, line in enumerate(fin):
         # Debug: print out the raw line to see what’s being read
