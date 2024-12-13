@@ -34,6 +34,14 @@ def main():
         
     file_name = os.path.join(args.data_dir, "data.txt")
     fin = open(file_name, "r", encoding="utf-8")
+
+    print(f"Reading data from: {args.data_dir}")
+    for idx, file in enumerate(os.listdir(args.data_dir)):
+       print(f"Processing file {idx + 1}: {file}")
+    with open(os.path.join(args.data_dir, file), 'r') as f:
+        raw_data = f.read()
+        print(f"Raw data (first 100 chars): {raw_data[:100]}")
+        
     # encoder use the tokenizer to encode data
     encoder = Encoder(args)
 
