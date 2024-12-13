@@ -50,7 +50,7 @@ def add_runtime_args(parser: argparse.ArgumentParser):
     group.add_argument('--base-path', type=str, default=None, help='Path to the project base directory.')
     group.add_argument('--load', type=str, default=None,
                        help='Path to a directory containing a model checkpoint.')
-    group.add_argument('--save', type=str, default="/content/distillm/results",
+    group.add_argument('--save', type=str, default=None,
                        help='Output directory to save checkpoints to.')
     group.add_argument("--log-interval", type=int, default=10)
     group.add_argument("--mid-log-num", type=int, default=4)
