@@ -17,7 +17,7 @@ class Encoder(object):
         
     def initializer(self):
         Encoder.tokenizer = AutoTokenizer.from_pretrained(self.args.model_path)
-        print("Debug: args.model_path =", args.model_path)
+        print("Debug: args.model_path =", self.args.model_path)
     # Rewind the file to the beginning
   
     def encode(self, line):
