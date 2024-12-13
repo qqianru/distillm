@@ -50,7 +50,7 @@ def add_runtime_args(parser: argparse.ArgumentParser):
     group.add_argument('--base-path', type=str, default=None, help='Path to the project base directory.')
     group.add_argument('--load', type=str, default=None,
                        help='Path to a directory containing a model checkpoint.')
-    group.add_argument('--save', type=str, default=None,
+    group.add_argument('--save', type=str, default="/content/distillm/results",
                        help='Output directory to save checkpoints to.')
     group.add_argument("--log-interval", type=int, default=10)
     group.add_argument("--mid-log-num", type=int, default=4)
@@ -234,7 +234,6 @@ def get_args():
     parser = add_gen_args(parser)
     parser = add_peft_args(parser)
     parser = deepspeed.add_config_arguments(parser)
-    parser.add_argument("--save", type=str, default="/content/distillm/results", help="Base directory to save results")
 
     
     args, unknown = parser.parse_known_args()
