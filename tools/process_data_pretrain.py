@@ -42,7 +42,6 @@ def main():
     # encoder use the tokenizer to encode data
     encoder = Encoder(args)
 
-    encoder.initializer()  # Sets Encoder.tokenizer in the main process
     for line_num, line in enumerate(fin):
         # Debug: print out the raw line to see what’s being read
         print("Debug: Going through:", line)
