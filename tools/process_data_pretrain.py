@@ -42,6 +42,10 @@ def main():
     # encoder use the tokenizer to encode data
     encoder = Encoder(args)
 
+    def encode_wrapper(line):
+    print("Debug: About to encode line:", line)
+    return encoder.encode(line)
+    
     # 2. Mapping all datas with Encoder, with the help of multiprocessing
     pool = multiprocessing.Pool(processes=args.data_process_workers, initializer=encoder.initializer)
     encoded_docs = pool.imap_unordered(encoder.encode, fin, chunksize=50)
