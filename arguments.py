@@ -234,6 +234,8 @@ def get_args():
     parser = add_gen_args(parser)
     parser = add_peft_args(parser)
     parser = deepspeed.add_config_arguments(parser)
+    parser.add_argument("--save", type=str, default="/content/distillm/results", help="Base directory to save results")
+
     
     args, unknown = parser.parse_known_args()
     
