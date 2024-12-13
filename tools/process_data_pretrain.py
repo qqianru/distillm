@@ -17,12 +17,10 @@ class Encoder(object):
         
     def initializer(self):
         Encoder.tokenizer = AutoTokenizer.from_pretrained(self.args.model_path)
-        print("Debug: args.model_path =", self.args.model_path)
     # Rewind the file to the beginning
   
     def encode(self, line):
         line = line.replace("<@x(x!>", "\n")        
-        print("Debug: The length of this line is:", len(line))
         token_ids = Encoder.tokenizer.encode(line, add_special_tokens=False) + [Encoder.tokenizer.eos_token_id]
         return token_ids, len(line)
 
@@ -36,24 +34,16 @@ def main():
         
     file_name = os.path.join(args.data_dir, "data.txt")
     fin = open(file_name, "r", encoding="utf-8")
-    
-    for line_num, line in enumerate(fin):
-    # Debug: print out the raw line to see what’s being read
-       print(f"Debug: Raw line {line_num}:", repr(line)) 
         
     # encoder use the tokenizer to encode data
     encoder = Encoder(args)
     encoder.initializer()
-    fin.seek(0)
-    for line_num, line in enumerate(fin):
-        # Debug: print out the raw line to see what’s being read
-        print("Debug: Going through:", line)
-        encoder.encode(line)
-
   
     # 2. Mapping all datas with Encoder, with the help of multiprocessing
     pool = multiprocessing.Pool(processes=args.data_process_workers, initializer=encoder.initializer)
     encoded_docs = pool.imap_unordered(encoder.encode, fin, chunksize=50)
+    for doc in encoded_docs:
+        print("Encoded Document:", doc)
     proc_start = time.time()
     total_bytes_processed = 0
 
