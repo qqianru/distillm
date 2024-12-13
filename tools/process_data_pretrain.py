@@ -42,8 +42,6 @@ def main():
     # 2. Mapping all datas with Encoder, with the help of multiprocessing
     pool = multiprocessing.Pool(processes=args.data_process_workers, initializer=encoder.initializer)
     encoded_docs = pool.imap_unordered(encoder.encode, fin, chunksize=50)
-    for doc in encoded_docs:
-        print("Encoded Document:", doc)
     proc_start = time.time()
     total_bytes_processed = 0
 
