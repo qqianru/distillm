@@ -14,7 +14,6 @@ from arguments import get_args
 class Encoder(object): 
     def __init__(self, args):
         self.args = args
-        print("Debug: The args of this file is:", args)
         
     def initializer(self):
         Encoder.tokenizer = AutoTokenizer.from_pretrained(self.args.model_path)
