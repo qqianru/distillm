@@ -10,3 +10,5 @@ PYTHONPATH=${BASE_PATH} python3 ${BASE_PATH}/tools/process_data_pretrain.py \
     --train-num 1 \
     --data-process-workers 32 \
     --dev-num 10000 \
+print(f"Raw document: {document}")
+print(f"Filtered document: {filtered_document}")
