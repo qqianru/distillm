@@ -20,7 +20,8 @@ import datetime
 import distillm
 print(dir(distillm))  # Check if forward_kl is listed
 
-%env PYTHONPATH=/content/distillm:$PYTHONPATH
+os.environ["PYTHONPATH"] = "/content/distillm:" + os.environ.get("PYTHONPATH", "")
+
 
 from transformers import (
     AutoModelForCausalLM,
