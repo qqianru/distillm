@@ -43,7 +43,7 @@ def main():
     encoder = Encoder(args)
 
     def encode_wrapper(line):
-    print("Debug: About to encode line:", line)
+        print("Debug: About to encode line:", line)
     return encoder.encode(line)
     
     # 2. Mapping all datas with Encoder, with the help of multiprocessing
