@@ -69,7 +69,6 @@ def main():
             continue
         
         buffer.extend(input_ids)
-        print("buffer length:", len(buffer))
         while len(buffer) >= args.max_length:
             inst = buffer[:args.max_length]
             buffer = buffer[args.max_length:]
@@ -81,7 +80,7 @@ def main():
             
             inst_num += 1
             
-        if lid % 10000 == 0:
+        if lid > 0:
             current = time.time()
             elapsed = current - proc_start
             mbs = total_bytes_processed / elapsed / 1024 / 1024
