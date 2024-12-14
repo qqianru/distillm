@@ -1,6 +1,6 @@
 BASE_PATH=${1}
 
-MAX_LENGTH=1
+MAX_LENGTH=512
 
 PYTHONPATH=${BASE_PATH} python3 ${BASE_PATH}/tools/process_data_pretrain.py \
     --data-dir ${BASE_PATH}/data/openwebtext \
