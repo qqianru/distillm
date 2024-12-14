@@ -95,7 +95,7 @@ def main():
 
     # finish compressing tokenized data into `bin_file`, and generate meta information into `idx_file`
     train_binary_builder.finalize(train_idx_file)
-    Print("hello I am here")
+    print("hello I am here")
     valid_binary_builder.finalize(valid_idx_file)
 
     # close multiproceessing mapping
