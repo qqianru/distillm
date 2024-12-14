@@ -76,21 +76,20 @@ def main():
             buffer = buffer[args.max_length:]
         
             if inst_num < args.dev_num:
-                valid_binary_builder.add_item(torch.IntTensor(inst))
-            else:
                 train_binary_builder.add_item(torch.IntTensor(inst))
-            
+            else:
+                valid_binary_builder.add_item(torch.IntTensor(inst))
             inst_num += 1
 
         if len(buffer)<args.max_length:
             inst=buffer
             print("Length of buffer", len(buffer))
             if inst_num < args.dev_num:
-                valid_binary_builder.add_item(torch.IntTensor(inst))
-            else:
                 train_binary_builder.add_item(torch.IntTensor(inst))
-            
+            else:
+                valid_binary_builder.add_item(torch.IntTensor(inst)         
             inst_num += 1
+                
         if lid > 0:
             current = time.time()
             elapsed = current - proc_start
