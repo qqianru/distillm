@@ -154,7 +154,6 @@ def prepare_dataset(args, tokenizer):
     data = {}
     rng_sample = random.Random(args.seed)
     if args.do_train:
-        print("Path=",args.data_dir)
         data["train"] = LMTrainDataset(args, tokenizer, args.data_dir, "train", args.train_num, args.train_ratio, rng_sample)
         print_rank("train num", len(data["train"]))
         data["dev"] = LMTrainDataset(args, tokenizer, args.data_dir, "valid", args.dev_num, args.dev_ratio, rng_sample)
@@ -579,6 +578,7 @@ def main():
     tokenizer = get_tokenizer(args)
     print("Tokenizer:", tokenizer)
     print("Tokenizer Config:", tokenizer.__dict__)
+    print("Path in prepare_dataset=", args.path)
     dataset = prepare_dataset(
         args,
         tokenizer,
