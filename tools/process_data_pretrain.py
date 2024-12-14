@@ -87,7 +87,7 @@ def main():
             if inst_num < args.dev_num:
                 train_binary_builder.add_item(torch.IntTensor(inst))
             else:
-                valid_binary_builder.add_item(torch.IntTensor(inst)         
+                valid_binary_builder.add_item(torch.IntTensor(inst))         
             inst_num += 1
                 
         if lid > 0:
