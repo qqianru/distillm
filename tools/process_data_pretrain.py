@@ -29,6 +29,7 @@ def main():
     args = get_args()
         
     args.processed_data_dir = os.path.join(args.processed_data_dir, numerize(args.train_num))
+    print("Processed Data Directory:", args.processed_data_dir)
 
     os.makedirs(args.processed_data_dir, exist_ok=True)
         
