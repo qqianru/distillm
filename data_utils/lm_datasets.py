@@ -22,6 +22,7 @@ class LMTrainDataset(Dataset):
         self.max_length = args.max_length
         self.max_prompt_length = args.max_prompt_length
         self.rng_sample = rng_sample
+        print("Path=",path)
         self.lm_ctx = DistributedMMapIndexedDataset(path, f"{split}", get_rank(), get_world_size())
 
         if os.path.exists(os.path.join(path, f"{split}.jsonl")):
