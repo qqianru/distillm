@@ -71,7 +71,7 @@ def main():
             continue
         
         buffer.extend(input_ids)
-        while len(buffer) >= args.max_length:
+        if len(buffer) >= args.max_length:
             inst = buffer[:args.max_length]
             buffer = buffer[args.max_length:]
         
@@ -82,8 +82,9 @@ def main():
             
             inst_num += 1
 
-        while len(buffer)<args.max_length:
+        if len(buffer)<args.max_length:
             inst=buffer
+            print("Length of buffer", len(buffer))
             if inst_num < args.dev_num:
                 valid_binary_builder.add_item(torch.IntTensor(inst))
             else:
