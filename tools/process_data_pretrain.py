@@ -49,6 +49,7 @@ def main():
     # 3. tool `indexed_dataset` compress the tokenized data into binary format `bin_file`
     # it will also generate another small `idx_file` for saving meta information in order to decode `bin_file`.
     train_bin_file = os.path.join(args.processed_data_dir, f"train_{0}.bin")
+    print("Train bin Directory:", train_bin_file)
     train_idx_file = os.path.join(args.processed_data_dir, f"train_{0}.idx")
 
     valid_bin_file = os.path.join(args.processed_data_dir, f"valid_{0}.bin")
@@ -94,6 +95,7 @@ def main():
 
     # finish compressing tokenized data into `bin_file`, and generate meta information into `idx_file`
     train_binary_builder.finalize(train_idx_file)
+    Print("hello I am here")
     valid_binary_builder.finalize(valid_idx_file)
 
     # close multiproceessing mapping
