@@ -550,7 +550,6 @@ def main():
     
     args = get_args()
     initialize(args)
-    print("initializaed args:", args.data_dir)
     
     if dist.get_rank() == 0:
         print_args(args)
@@ -577,9 +576,6 @@ def main():
     
     # get the tokenizer
     tokenizer = get_tokenizer(args)
-    print("Tokenizer:", tokenizer)
-    print("Tokenizer Config:", tokenizer.__dict__)
-    print("Path in prepare_dataset=", args.path)
     dataset = prepare_dataset(
         args,
         tokenizer,
