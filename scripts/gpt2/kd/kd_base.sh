@@ -20,7 +20,7 @@ CKPT="${BASE_PATH}/checkpoints/${CKPT_NAME}/"
 TEACHER_CKPT_NAME="xlarge-sft"
 TEACHER_CKPT="${BASE_PATH}/results/gpt2/train/sft/gpt2-xlarge/"
 # data
-DATA_DIR="${BASE_PATH}processed_data/openwebtext/gpt2/1/10/"
+DATA_DIR="${BASE_PATH}/processed_data/openwebtext/gpt2/1/10/"
 # hp
 BATCH_SIZE=2
 LR=0.0005
