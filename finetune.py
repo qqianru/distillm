@@ -550,6 +550,7 @@ def main():
     
     args = get_args()
     initialize(args)
+    print("initializaed args:", args.data_dir)
     
     if dist.get_rank() == 0:
         print_args(args)
