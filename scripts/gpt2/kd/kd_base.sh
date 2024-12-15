@@ -18,7 +18,7 @@ CKPT_NAME="gpt2"
 CKPT="${BASE_PATH}/checkpoints/${CKPT_NAME}/"
 # CKPT="gpt2" # download automatically
 TEACHER_CKPT_NAME="xlarge-sft"
-TEACHER_CKPT="${BASE_PATH}/checkpoints/gpt2-xlarge/"
+TEACHER_CKPT="${BASE_PATH}/checkpoints/gpt2-large/"
 # data
 DATA_DIR="${BASE_PATH}/processed_data/openwebtext/gpt2/512/10/"
 # hp
