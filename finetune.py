@@ -58,7 +58,8 @@ torch.set_num_threads(4)
 
 
 def get_teacher_model(args, device):
-    config = AutoConfig.from_pretrained(args.teacher_model_path)
+    print("teacher_model_path",args.teacher_model_path)
+    config = AutoConfig.from_pretrained(args.teacher_model_path)   
     if args.model_parallel:
         raise NotImplementedError
     else:
