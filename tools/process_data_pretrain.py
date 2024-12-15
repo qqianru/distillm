@@ -17,7 +17,7 @@ class Encoder(object):
         
     def initializer(self):
         Encoder.tokenizer = AutoTokenizer.from_pretrained(self.args.model_path)
-        tokenizer.padding_side = "left"
+        Encoder.tokenizer.padding_side = "left"
     # Rewind the file to the beginning
   
     def encode(self, line):
