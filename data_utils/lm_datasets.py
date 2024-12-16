@@ -86,30 +86,37 @@ class LMTrainDataset(Dataset):
 
         return model_data, no_model_data, gen_data
 
-    def collate(self, samples):
-        bs = len(samples)
+def collate(self, samples):
+    bs = len(samples)
+    max_length = self.max_length
 
-        max_length = self.max_length
+    model_data = {
+        "input_ids": torch.ones(bs, max_length, dtype=torch.long) * self.pad_id,
+        "attention_mask": torch.zeros(bs, max_length),
+    }
+    
+    if self.args.model_type in ["gpt2"]:
+        model_data["position_ids"] = torch.zeros(bs, max_length, dtype=torch.long)
         
-        model_data = {
-            "input_ids": torch.ones(bs, max_length, dtype=torch.long) * self.pad_id,
-            "attention_mask": torch.zeros(bs, max_length),
-        }
-        
-        if self.args.model_type in ["gpt2"]:
-            model_data["position_ids"] = torch.zeros(bs, max_length, dtype=torch.long)
-            
-        no_model_data = {
-            "label": torch.ones(bs, max_length, dtype=torch.long) * -100,
-            "loss_mask": torch.zeros(bs, max_length)
-        }
-        
-        gen_data = {
-            "input_ids": torch.ones(bs, self.max_prompt_length, dtype=torch.long) * self.pad_id,
-            "attention_mask": torch.zeros(bs, self.max_prompt_length, dtype=torch.long),
-        }
+    no_model_data = {
+        "label": torch.ones(bs, max_length, dtype=torch.long) * -100,
+        "loss_mask": torch.zeros(bs, max_length),
+    }
+    
+    gen_data = {
+        "input_ids": torch.ones(bs, self.max_prompt_length, dtype=torch.long) * self.pad_id,
+        "attention_mask": torch.zeros(bs, self.max_prompt_length, dtype=torch.long),
+    }
 
-        for i, samp in enumerate(samples):
-            self._process_lm(i, samp, model_data, no_model_data, gen_data)
+    for i, samp in enumerate(samples):
+        # Process each sample and calculate the effective length
+        seq_len = len(samp['input_ids'])
         
-        return model_data, no_model_data, gen_data
+        # Left-pad the input_ids and attention_mask
+        model_data["input_ids"][i, -seq_len:] = torch.tensor(samp['input_ids'])  # Add sequence at the end
+        model_data["attention_mask"][i, -seq_len:] = 1  # Mark the sequence positions as valid
+        
+        # Modify other data similarly if needed
+        self._process_lm(i, samp, model_data, no_model_data, gen_data)
+    
+    return model_data, no_model_data, gen_data
