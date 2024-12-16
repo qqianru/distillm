@@ -257,7 +257,10 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
         dp_rank = dist.get_rank()
         dp_group = None
         loss_func = nn.CrossEntropyLoss()
-
+        
+    for batch in dataset["train"]:
+            print("Batch structure-train_dataloader-before-dataloader:", batch)
+            break
     sampler = DistributedSampler(dataset["train"], shuffle=True, drop_last=True, rank=dp_rank, num_replicas=dp_world_size)
     train_dataloader = DataLoader(
         dataset['train'], sampler=sampler, batch_size=args.batch_size, num_workers=args.num_workers, collate_fn=dataset["train"].collate)
