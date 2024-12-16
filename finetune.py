@@ -474,7 +474,7 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
     
     for batch in dataloader:
         print("Batch structure:", batch)
-    break
+        break
 
     model.eval()
     all_loss = 0.0
