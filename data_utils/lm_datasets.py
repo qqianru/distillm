@@ -88,38 +88,38 @@ class LMTrainDataset(Dataset):
 
     def collate(self, samples):
         
-    bs = len(samples)
-    max_length = max(len(samp["input_ids"]) for samp in samples)  # Dynamically calculate max length
-
-    # Initialize with padding
-    model_data = {
-        "input_ids": torch.ones(bs, max_length, dtype=torch.long) * self.pad_id,
-        "attention_mask": torch.zeros(bs, max_length),
-        "position_ids": torch.arange(max_length).unsqueeze(0).expand(bs, -1),  # Sequential positions
-    }
-
-    no_model_data = {
-        "label": torch.ones(bs, max_length, dtype=torch.long) * -100,
-        "loss_mask": torch.zeros(bs, max_length),
-    }
-
-    max_prompt_length = max(len(samp.get("gen_input_ids", [])) for samp in samples) if samples else 0
-    gen_data = {
-        "input_ids": torch.ones(bs, max_prompt_length, dtype=torch.long) * self.pad_id,
-        "attention_mask": torch.zeros(bs, max_prompt_length, dtype=torch.long),
-    }
-
-    input_ids = [torch.tensor(samp["input_ids"], dtype=torch.long) for samp in samples]
-    for i, samp in enumerate(samples):
-        seq_len = len(samp["input_ids"])
-
-        # Left-pad the input_ids and attention_mask
-        model_data["input_ids"][i, :seq_len] = input_ids[i]
-        model_data["attention_mask"][i, :seq_len] = 1
-
-        try:
-            self._process_lm(i, samp, model_data, no_model_data, gen_data)
-        except Exception as e:
-            raise RuntimeError(f"Error in _process_lm for sample {i}: {e}")
-
-    return model_data, no_model_data, gen_data
+        bs = len(samples)
+        max_length = max(len(samp["input_ids"]) for samp in samples)  # Dynamically calculate max length
+    
+        # Initialize with padding
+        model_data = {
+            "input_ids": torch.ones(bs, max_length, dtype=torch.long) * self.pad_id,
+            "attention_mask": torch.zeros(bs, max_length),
+            "position_ids": torch.arange(max_length).unsqueeze(0).expand(bs, -1),  # Sequential positions
+        }
+    
+        no_model_data = {
+            "label": torch.ones(bs, max_length, dtype=torch.long) * -100,
+            "loss_mask": torch.zeros(bs, max_length),
+        }
+    
+        max_prompt_length = max(len(samp.get("gen_input_ids", [])) for samp in samples) if samples else 0
+        gen_data = {
+            "input_ids": torch.ones(bs, max_prompt_length, dtype=torch.long) * self.pad_id,
+            "attention_mask": torch.zeros(bs, max_prompt_length, dtype=torch.long),
+        }
+    
+        input_ids = [torch.tensor(samp["input_ids"], dtype=torch.long) for samp in samples]
+        for i, samp in enumerate(samples):
+            seq_len = len(samp["input_ids"])
+    
+            # Left-pad the input_ids and attention_mask
+            model_data["input_ids"][i, :seq_len] = input_ids[i]
+            model_data["attention_mask"][i, :seq_len] = 1
+    
+            try:
+                self._process_lm(i, samp, model_data, no_model_data, gen_data)
+            except Exception as e:
+                raise RuntimeError(f"Error in _process_lm for sample {i}: {e}")
+    
+        return model_data, no_model_data, gen_data
