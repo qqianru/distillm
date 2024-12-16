@@ -473,9 +473,8 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
         dataset, sampler=sampler, batch_size=args.eval_batch_size, num_workers=args.num_workers, collate_fn=collate_fn)
     
     for batch in dataloader:
-        print("Batch input_ids:", batch["input_ids"])
-        print("Padding tokens location:", (batch["input_ids"] == tokenizer.pad_token_id).nonzero())
-        break
+        print("Batch structure:", batch)
+    break
 
     model.eval()
     all_loss = 0.0
