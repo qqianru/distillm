@@ -471,6 +471,11 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
     sampler = DistributedSampler(dataset, shuffle=False, drop_last=False, rank=dp_rank, num_replicas=dp_world_size)
     dataloader = DataLoader(
         dataset, sampler=sampler, batch_size=args.eval_batch_size, num_workers=args.num_workers, collate_fn=collate_fn)
+    
+    for batch in dataloader:
+        print("Batch input_ids:", batch["input_ids"])
+        print("Padding tokens location:", (batch["input_ids"] == tokenizer.pad_token_id).nonzero())
+        break
 
     model.eval()
     all_loss = 0.0
