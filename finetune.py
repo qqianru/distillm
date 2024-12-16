@@ -261,7 +261,11 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
     sampler = DistributedSampler(dataset["train"], shuffle=True, drop_last=True, rank=dp_rank, num_replicas=dp_world_size)
     train_dataloader = DataLoader(
         dataset['train'], sampler=sampler, batch_size=args.batch_size, num_workers=args.num_workers, collate_fn=dataset["train"].collate)
-    
+
+    for batch in train_dataloader:
+        print("Batch structure-train_dataloader:", batch)
+        break
+        
     if "pt_train" in dataset:
         pt_sampler = DistributedSampler(dataset["pt_train"], shuffle=True, drop_last=True, rank=dp_rank, num_replicas=dp_world_size)
         pt_train_dataloader = DataLoader(
@@ -275,6 +279,9 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
     
     adaptive_threshold = args.init_threshold if "adaptive" in args.type else None
     print("tokenizer.padding_size before evluation:", tokenizer.padding_side)
+    for batch in dataset["dev"]:
+        print("Batch dataset["dev"]:", batch)
+        break
     prev_avg_loss = evaluate(args, tokenizer, model, dataset["dev"], "dev", 0, device, adaptive_threshold)
     replay_buffer = ReplayBuffer(args)
     
