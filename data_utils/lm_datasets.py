@@ -87,18 +87,7 @@ class LMTrainDataset(Dataset):
         return model_data, no_model_data, gen_data
 
     def collate(self, samples):
-    """
-    Collates samples into a batch for training.
-
-    Args:
-        samples (list of dict): List of sample dictionaries, each containing "input_ids" and other optional keys.
-
-    Returns:
-        tuple: (model_data, no_model_data, gen_data)
-            - model_data: Dict with input_ids, attention_mask, and position_ids.
-            - no_model_data: Dict with label and loss_mask for loss computation.
-            - gen_data: Placeholder dict for generation tasks.
-    """
+        
     bs = len(samples)
     max_length = max(len(samp["input_ids"]) for samp in samples)  # Dynamically calculate max length
 
