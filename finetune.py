@@ -440,7 +440,7 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
 
 
 def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, device, adaptive_threshold=None):
-    
+
     collate_fn = dataset.collate
 
     if args.model_parallel:
@@ -577,10 +577,12 @@ def main():
     
     # get the tokenizer
     tokenizer = get_tokenizer(args)
+    print(f"Tokenizer padding_side: {tokenizer.padding_side}")
     dataset = prepare_dataset(
         args,
         tokenizer,
     )
+    
     
     dp_world_size = dist.get_world_size()
     
