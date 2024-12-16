@@ -87,37 +87,50 @@ class LMTrainDataset(Dataset):
         return model_data, no_model_data, gen_data
 
     def collate(self, samples):
-        bs = len(samples)
-        max_length = self.max_length
-    
-        # Initialize with padding
-        model_data = {
-            "input_ids": torch.ones(bs, max_length, dtype=torch.long) * self.pad_id,
-            "attention_mask": torch.zeros(bs, max_length),
-        }
-    
-        if self.args.model_type in ["gpt2"]:
-            model_data["position_ids"] = torch.zeros(bs, max_length, dtype=torch.long)
-    
-        no_model_data = {
-            "label": torch.ones(bs, max_length, dtype=torch.long) * -100,
-            "loss_mask": torch.zeros(bs, max_length),
-        }
-    
-        gen_data = {
-            "input_ids": torch.ones(bs, self.max_prompt_length, dtype=torch.long) * self.pad_id,
-            "attention_mask": torch.zeros(bs, self.max_prompt_length, dtype=torch.long),
-        }
-    
-        for i, samp in enumerate(samples):
-            # Calculate sequence length
-            seq_len = len(samp['input_ids'])
-    
-            # Left-pad the input_ids and attention_mask
-            model_data["input_ids"][i, :seq_len] = torch.tensor(samp['input_ids'])
-            model_data["attention_mask"][i, :seq_len] = 1
-    
-            # Process additional data
+    """
+    Collates samples into a batch for training.
+
+    Args:
+        samples (list of dict): List of sample dictionaries, each containing "input_ids" and other optional keys.
+
+    Returns:
+        tuple: (model_data, no_model_data, gen_data)
+            - model_data: Dict with input_ids, attention_mask, and position_ids.
+            - no_model_data: Dict with label and loss_mask for loss computation.
+            - gen_data: Placeholder dict for generation tasks.
+    """
+    bs = len(samples)
+    max_length = max(len(samp["input_ids"]) for samp in samples)  # Dynamically calculate max length
+
+    # Initialize with padding
+    model_data = {
+        "input_ids": torch.ones(bs, max_length, dtype=torch.long) * self.pad_id,
+        "attention_mask": torch.zeros(bs, max_length),
+        "position_ids": torch.arange(max_length).unsqueeze(0).expand(bs, -1),  # Sequential positions
+    }
+
+    no_model_data = {
+        "label": torch.ones(bs, max_length, dtype=torch.long) * -100,
+        "loss_mask": torch.zeros(bs, max_length),
+    }
+
+    max_prompt_length = max(len(samp.get("gen_input_ids", [])) for samp in samples) if samples else 0
+    gen_data = {
+        "input_ids": torch.ones(bs, max_prompt_length, dtype=torch.long) * self.pad_id,
+        "attention_mask": torch.zeros(bs, max_prompt_length, dtype=torch.long),
+    }
+
+    input_ids = [torch.tensor(samp["input_ids"], dtype=torch.long) for samp in samples]
+    for i, samp in enumerate(samples):
+        seq_len = len(samp["input_ids"])
+
+        # Left-pad the input_ids and attention_mask
+        model_data["input_ids"][i, :seq_len] = input_ids[i]
+        model_data["attention_mask"][i, :seq_len] = 1
+
+        try:
             self._process_lm(i, samp, model_data, no_model_data, gen_data)
-    
-        return model_data, no_model_data, gen_data
+        except Exception as e:
+            raise RuntimeError(f"Error in _process_lm for sample {i}: {e}")
+
+    return model_data, no_model_data, gen_data
