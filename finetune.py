@@ -477,7 +477,7 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
     step = 0
     
     all_response_ids = []
-    
+    print("tokenizer.padding_size within evluation:", tokenizer.padding_side)
     with torch.no_grad():
         for it, (model_batch, no_model_batch, gen_data) in enumerate(tqdm(dataloader, desc="Evaluating", disable=(dist.get_rank() != 0))):
             print_rank(f"{it}/{len(dataloader)}")
