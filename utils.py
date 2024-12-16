@@ -201,6 +201,7 @@ def get_tokenizer(args):
     tokenizer = AutoTokenizer.from_pretrained(args.model_path)
     if args.model_type in ["gpt2", "opt", "llama", "gptj", "llama2", "mistral"]:
         tokenizer.pad_token_id = tokenizer.eos_token_id
+        tokenizer.padding_side = "left"
     elif args.model_type=="qwen":
         tokenizer.pad_token_id = 151646
         tokenizer.eos_token_id = 151643
