@@ -469,8 +469,15 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
 def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, device, adaptive_threshold=None):
 
     collate_fn = dataset.collate
-    print(f"Dataset source: {dataset.data}")
-    print(f"Content at index 10: {dataset.data[10]}")
+    for idx in range(len(dataset)):
+        try:
+            print(f"Accessing sample {idx}...")
+            sample = dataset[idx]
+            print(f"Sample {idx} is valid: {sample}")
+        except Exception as e:
+            print(f"Error accessing sample {idx}: {e}")
+            break
+
 
 
     # Check if distributed is initialized
