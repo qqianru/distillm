@@ -9,6 +9,7 @@ import torch.nn.functional as F
 from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.distributed as dist
 from torch.utils.data import DataLoader, DistributedSampler
+from torch.utils.data import RandomSampler
 from torch.optim import AdamW
 import deepspeed
 
@@ -49,6 +50,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from distillm import forward_kl, reverse_kl, js_distance, tv_distance
 from distillm import skewed_forward_kl, skewed_reverse_kl
 from distillm import SampleGenerator, ReplayBuffer
+
 
 from rouge_metric import compute_metrics
 
