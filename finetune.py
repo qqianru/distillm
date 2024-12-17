@@ -469,6 +469,10 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
 def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, device, adaptive_threshold=None):
 
     collate_fn = dataset.collate
+    for idx in range(len(dataset)):
+        sample = dataset[idx]
+        if sample is None or 'loss_mask' not in sample:
+            print(f"Sample {idx} is None or invalid.")
 
     # Check if distributed is initialized
     dist_initialized = dist.is_initialized()
