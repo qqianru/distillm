@@ -42,6 +42,7 @@ class LMTrainDataset(Dataset):
    
     def __getitem__(self, index):
         print("Dataset length:", len(self))
+        print(f"Fetching item at index {index}")
         return self._get_lm(index)
     
     def _get_lm(self, index):
