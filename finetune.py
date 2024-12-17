@@ -525,21 +525,22 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
             logits = model(**model_batch).logits
             if args.model_parallel:
                 raise NotImplementedError
-
+            tqdm.write("Before loss calculation")
             loss = loss_func(logits.view(-1, logits.shape[-1]), no_model_batch["label"].view(-1))
-
+            tqdm.write("After loss calculation")
+            
             # Only perform generation if eval_gen is True and gen_data is not None
             if args.eval_gen and gen_data is not None:
                 max_new_tokens = args.max_length - gen_data["input_ids"].size(1)
                 max_new_tokens = min(max_new_tokens, 50)  # for example
 
-                print_rank("About to call model.generate()")
+                tqdm.write("Before model.generate()")
                 gen_out = model.generate(
                     **gen_data,
                     generation_config=generation_config,
                     max_new_tokens=max_new_tokens
                 )
-                print_rank("Model generation done")
+                tqdm.write("After model.generate()")
                 
                 full_ids = gen_out.sequences
                 
