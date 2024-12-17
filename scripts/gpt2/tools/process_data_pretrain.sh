@@ -9,4 +9,4 @@ PYTHONPATH=${BASE_PATH} python3 ${BASE_PATH}/tools/process_data_pretrain.py \
     --max-length ${MAX_LENGTH} \
     --train-num 10 \
     --data-process-workers 1 \
-    --dev-num 600 \
+    --dev-num 400 \
