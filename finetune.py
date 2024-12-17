@@ -469,14 +469,16 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
 def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, device, adaptive_threshold=None):
 
     collate_fn = dataset.collate
-    for idx in range(len(dataset)):
-        try:
-            print(f"Accessing sample {idx}...")
-            sample = dataset[idx]
-            print(f"Sample {idx} is valid: {sample}")
-        except Exception as e:
-            print(f"Error accessing sample {idx}: {e}")
-            break
+    import time
+    
+    print("Accessing sample 10...")
+    start_time = time.time()
+    try:
+        sample = dataset[10]
+        print(f"Sample 10 loaded successfully in {time.time() - start_time:.2f} seconds")
+    except Exception as e:
+        print(f"Error while accessing sample 10: {e}")
+
 
 
 
