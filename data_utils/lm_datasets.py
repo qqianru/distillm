@@ -81,8 +81,9 @@ class LMTrainDataset(Dataset):
         for k in no_model_data:
             no_model_data[k] = no_model_data[k].to(device)
 
-        for k in gen_data:
-            gen_data[k] = gen_data[k].to(device)
+        if gen_data is not None:
+            for k, v in gen_data.items():
+                gen_data[k] = v.to(device)
 
         return model_data, no_model_data, gen_data
 
