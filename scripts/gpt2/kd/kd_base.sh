@@ -46,7 +46,7 @@ OPTS+=" --n-gpu ${GPUS_PER_NODE}"
 # OPTS+=" --gradient-checkpointing"
 # data
 OPTS+=" --data-dir ${DATA_DIR}"
-OPTS+=" --num-workers 1"
+OPTS+=" --num-workers 0"
 OPTS+=" --dev-num 1000"
 # hp
 OPTS+=" --lr ${LR}"
