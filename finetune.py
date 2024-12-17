@@ -496,11 +496,16 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
         return_dict_in_generate=True,
         output_scores=False
     )
+    
+    print("Length of dataset:", len(dataset))
+    print("First sample:", dataset[0])
 
     if dp_world_size > 1:
         sampler = DistributedSampler(dataset, shuffle=False, drop_last=False, rank=dp_rank, num_replicas=dp_world_size)
     else:
+        print("About to define RandomSampler...")
         sampler = RandomSampler(dataset)  # If single GPU, use a simple random sampler
+        print("RandomSampler defined successfully.")
 
     dataloader = DataLoader(
         dataset, sampler=sampler, batch_size=1, num_workers=0, collate_fn=collate_fn
