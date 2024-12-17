@@ -9,7 +9,7 @@ import torch.nn.functional as F
 from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.distributed as dist
 from torch.utils.data import DataLoader, DistributedSampler
-from torch.utils.data import RandomSampler
+from torch.utils.data import RandomSampler,SequentialSample
 from torch.optim import AdamW
 import deepspeed
 
