@@ -294,7 +294,7 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
 
     adaptive_threshold = args.init_threshold if "adaptive" in args.type else None
     n = 0
-    print("Direct access of sample 11:", dataset["dev"][11])
+    print("length of dataset_dev:", len(dataset["dev"]))
     for batch in dataset["dev"]:
         print(f"Processing batch {n} in dataset_Dev, batch structure: {batch}")
         n += 1
