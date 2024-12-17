@@ -507,11 +507,12 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
         dataset, sampler=sampler, batch_size=1, num_workers=0, collate_fn=collate_fn
     )
     
-    # Debug: print one batch structure
-    n=0
+   n = 0
     for batch in dataloader:
-        n +=1
-    print("batch in dataloader, n=",n)
+        print(f"Processing batch {n}, batch structure: {batch}")
+        n += 1
+    print("Finished processing all batches")
+
 
     model.eval()
     all_loss = 0.0
