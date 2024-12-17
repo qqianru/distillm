@@ -469,10 +469,7 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
 def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, device, adaptive_threshold=None):
 
     collate_fn = dataset.collate
-    import time
-    
-    print("Manual fetch for sample 10:")
-    print(dataset.samples[10])  # Adjust to match your dataset structure
+    print("length of dataset:", len(dataset))
 
     # Check if distributed is initialized
     dist_initialized = dist.is_initialized()
