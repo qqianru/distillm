@@ -42,7 +42,6 @@ class LMTrainDataset(Dataset):
    
     def __getitem__(self, index):
         print("Dataset length:", len(self))
-        print("First sample:", self[0])
         return self._get_lm(index)
     
     def _get_lm(self, index):
