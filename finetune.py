@@ -471,16 +471,8 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
     collate_fn = dataset.collate
     import time
     
-    print("Accessing sample 10...")
-    start_time = time.time()
-    try:
-        sample = dataset[10]
-        print(f"Sample 10 loaded successfully in {time.time() - start_time:.2f} seconds")
-    except Exception as e:
-        print(f"Error while accessing sample 10: {e}")
-
-
-
+    print("Manual fetch for sample 10:")
+    print(dataset.samples[10])  # Adjust to match your dataset structure
 
     # Check if distributed is initialized
     dist_initialized = dist.is_initialized()
