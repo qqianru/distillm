@@ -144,7 +144,7 @@ class LMTrainDataset(Dataset):
             except Exception as e:
                 raise RuntimeError(f"Error in _process_lm for sample {i}: {e}")
         print("Collate done")
-        return model_data, no_model_data
+        return model_data, no_model_data,gen_data
 
     
     
