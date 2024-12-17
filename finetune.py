@@ -480,8 +480,10 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
 
     sampler = DistributedSampler(dataset, shuffle=False, drop_last=False, rank=dp_rank, num_replicas=dp_world_size)
     dataloader = DataLoader(
-        dataset, sampler=sampler, batch_size=args.eval_batch_size, num_workers=args.num_workers, collate_fn=collate_fn)
+        dataset, sampler=sampler, batch_size=args.eval_batch_size, num_workers=args.num_workers, collate_fn=collate_fn
+    )
     
+    # Debug: print one batch structure
     for batch in dataloader:
         print("Batch structure:", batch)
         break
@@ -502,39 +504,45 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
             else:
                 loss = loss_func(logits.view(-1, logits.shape[-1]), no_model_batch["label"].view(-1))
             
-            max_new_tokens = args.max_length - gen_data["input_ids"].size(1)
-            
-            if args.eval_gen:            
+            # ### CHANGED: Only proceed with generation if args.eval_gen is True and gen_data is not None
+            if args.eval_gen and gen_data is not None:  # <--- Added condition to check if gen_data is present
+                max_new_tokens = args.max_length - gen_data["input_ids"].size(1)
+                
                 gen_out = model.generate(
                     **gen_data,
                     generation_config=generation_config,
-                    max_new_tokens=max_new_tokens)
+                    max_new_tokens=max_new_tokens
+                )
                 
                 full_ids = gen_out.sequences
                 
                 full_ids = F.pad(
                     full_ids,
-                    (args.max_length - full_ids.shape[1],0),
+                    (args.max_length - full_ids.shape[1], 0),
                     value=tokenizer.pad_token_id,
                 )
                 
                 response_ids = full_ids[:, gen_data["input_ids"].size(1):]
                 all_response_ids.append(response_ids)
-                    
+            # ### CHANGED: If gen_data is None, we do nothing here and skip generation.
+
             dist.all_reduce(loss, dist.ReduceOp.SUM, group=dp_group)
             loss = loss / dp_world_size
             all_loss += loss.item()
             step += 1
     
-    if args.eval_gen:
+    # ### CHANGED: Only process responses if generation actually happened
+    if args.eval_gen and len(all_response_ids) > 0:  # <--- Checks that responses were collected
         all_response_ids = torch.cat(all_response_ids, dim=0)
         all_response_ids = all_gather(all_response_ids, dim=1, world_size=dp_world_size, group=dp_group, op="stack")
         all_response_ids = all_response_ids.view(-1, all_response_ids.size(-1))
         
         responses = tokenizer.batch_decode(all_response_ids, skip_special_tokens=True)
-    
+    else:
+        responses = []  # <--- If no generation was done, keep responses empty
+
     if get_rank() == 0:
-        if args.eval_gen:
+        if args.eval_gen and len(responses) > 0:  # <--- Only compute metrics if we have responses
             references = dataset.answers
             responses = responses[:len(references)]
             
@@ -559,6 +567,7 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
         save_rank(log_str, os.path.join(args.save, "log.txt"))
         
     return all_loss / step
+
 
 
 def main():
