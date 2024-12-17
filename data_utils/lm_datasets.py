@@ -90,6 +90,7 @@ class LMTrainDataset(Dataset):
     def collate(self, samples):
         # Filter out samples that have no tokens
         samples = [s for s in samples if len(s.get("input_ids", [])) > 0]
+        batch = [sample for sample in batch if sample is not None]
         print("Collate called with", len(samples), "samples")
     
         # If no valid samples remain, raise an error or return None
