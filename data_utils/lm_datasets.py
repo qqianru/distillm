@@ -111,6 +111,8 @@ class LMTrainDataset(Dataset):
             "label": torch.ones(bs, max_length, dtype=torch.long) * -100,
             "loss_mask": torch.zeros(bs, max_length),
         }
+        # Print the contents of loss_mask
+        print("Contents of loss_mask:\n", no_model_data["loss_mask"])
     
         # Check for gen_input_ids
         max_prompt_length = max((len(s.get("gen_input_ids", [])) for s in samples), default=0)
