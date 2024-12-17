@@ -41,8 +41,8 @@ class LMTrainDataset(Dataset):
         return len(self.lm_ctx)
    
     def __getitem__(self, index):
-        print("Dataset length:", len(self))
-        print(f"Fetching item at index {index}")
+        if idx < 0 or idx >= len(self):
+            raise IndexError(f"Index {index} is out of bounds for dataset of length {len(self)}.")
         return self._get_lm(index)
     
     def _get_lm(self, index):
