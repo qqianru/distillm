@@ -262,11 +262,6 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
     dp_group = None
     loss_func = nn.CrossEntropyLoss()
 
-    # Debug print first batch before dataloader
-    for batch in dataset["train"]:
-        print("Batch structure-train_dataloader-before-dataloader:", batch)
-        break
-
     if dp_world_size > 1:
         sampler = DistributedSampler(dataset["train"], shuffle=True, drop_last=True, rank=dp_rank, num_replicas=dp_world_size)
     else:
@@ -293,12 +288,7 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
     total_loss, total_distil_loss, total_time = 0.0, 0.0, 0.0
 
     adaptive_threshold = args.init_threshold if "adaptive" in args.type else None
-    n = 0
-    print("length of dataset_dev:", len(dataset["dev"]))
-    for batch in dataset["dev"]:
-        print(f"Processing batch {n} in dataset_Dev, batch structure: {batch}")
-        n += 1
-    print("Finished processing all batches")
+
     
     prev_avg_loss = evaluate(args, tokenizer, model, dataset["dev"], "dev", 0, device, adaptive_threshold)
     replay_buffer = ReplayBuffer(args)
@@ -508,18 +498,12 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
     )
     
     n = 0
-    for batch in dataloader:
-        print(f"Processing batch {n}, batch structure: {batch}")
-        n += 1
-    print("Finished processing all batches")
-
-
+    
     model.eval()
     all_loss = 0.0
     step = 0
     
     all_response_ids = []
-    print("tokenizer.padding_size within evluation 1:", tokenizer.padding_side)
     with torch.no_grad():
         for it, (model_batch, no_model_batch, gen_data) in enumerate(tqdm(dataloader, desc="Evaluating", disable=(dp_rank != 0))):
             print_rank(f"{it}/{len(dataloader)}")
