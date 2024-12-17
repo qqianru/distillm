@@ -531,12 +531,15 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
             # Only perform generation if eval_gen is True and gen_data is not None
             if args.eval_gen and gen_data is not None:
                 max_new_tokens = args.max_length - gen_data["input_ids"].size(1)
-                
+                max_new_tokens = min(max_new_tokens, 50)  # for example
+
+                print_rank("About to call model.generate()")
                 gen_out = model.generate(
                     **gen_data,
                     generation_config=generation_config,
                     max_new_tokens=max_new_tokens
                 )
+                print_rank("Model generation done")
                 
                 full_ids = gen_out.sequences
                 
