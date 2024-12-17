@@ -503,7 +503,7 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
         sampler = RandomSampler(dataset)  # If single GPU, use a simple random sampler
 
     dataloader = DataLoader(
-        dataset, sampler=sampler, batch_size=args.eval_batch_size, num_workers=args.num_workers, collate_fn=collate_fn
+        dataset, sampler=sampler, batch_size=1, num_workers=0, collate_fn=collate_fn
     )
     
     # Debug: print one batch structure
