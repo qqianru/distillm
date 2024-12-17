@@ -508,8 +508,10 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
     )
     
     # Debug: print one batch structure
+    n=0
     for batch in dataloader:
         print("Batch structure:", batch)
+        n +=1
         break
 
     model.eval()
