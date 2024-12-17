@@ -528,7 +528,8 @@ def evaluate(args, tokenizer, model, dataset: LMTrainDataset, split, epoch, devi
             tqdm.write("Before loss calculation")
             loss = loss_func(logits.view(-1, logits.shape[-1]), no_model_batch["label"].view(-1))
             tqdm.write("After loss calculation")
-            
+            tqdm.write(f"eval_gen: {args.eval_gen}, gen_data is None: {gen_data is None}")
+
             # Only perform generation if eval_gen is True and gen_data is not None
             if args.eval_gen and gen_data is not None:
                 max_new_tokens = args.max_length - gen_data["input_ids"].size(1)
