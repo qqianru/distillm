@@ -38,6 +38,8 @@ class LMTrainDataset(Dataset):
         print_rank(f"Num LM instances: {len(self.lm_ctx)}")
 
     def __len__(self):
+        print("Initial self.num:", self.num)
+        print("Initial self.length:", len(self.data))
         return self.num
    
     def __getitem__(self, index):
