@@ -94,11 +94,11 @@ class LMTrainDataset(Dataset):
         if not samples:
             raise ValueError("All samples in this batch are empty after tokenization.")
     
-        # Dynamically calculate max_length
+        # Dynamically calculate max_length from input_ids
         max_length = max(len(s["input_ids"]) for s in samples)
     
-        # Initialize model_data
         bs = len(samples)
+        # Initialize model_data
         model_data = {
             "input_ids": torch.ones(bs, max_length, dtype=torch.long) * self.pad_id,
             "attention_mask": torch.zeros(bs, max_length),
@@ -110,25 +110,31 @@ class LMTrainDataset(Dataset):
             "loss_mask": torch.zeros(bs, max_length),
         }
     
-        # Handle gen_data
+        # Check for gen_input_ids
         max_prompt_length = max((len(s.get("gen_input_ids", [])) for s in samples), default=0)
+    
+        # If we have gen_input_ids, create gen_data
         if max_prompt_length > 0:
             gen_data = {
                 "input_ids": torch.ones(bs, max_prompt_length, dtype=torch.long) * self.pad_id,
                 "attention_mask": torch.zeros(bs, max_prompt_length, dtype=torch.long),
             }
         else:
-            # If there's no prompt data, just make empty tensors with batch dimension
-            gen_data = {
-                "input_ids": torch.empty(bs, 0, dtype=torch.long),
-                "attention_mask": torch.empty(bs, 0, dtype=torch.long),
-            }
+            # If no gen_input_ids are present, set gen_data to None
+            gen_data = None
     
-        # Fill model_data
+        # Fill model_data and no_model_data
         for i, samp in enumerate(samples):
             seq_len = len(samp["input_ids"])
             model_data["input_ids"][i, :seq_len] = torch.tensor(samp["input_ids"], dtype=torch.long)
             model_data["attention_mask"][i, :seq_len] = 1.0
+    
+            # If we have gen_data, we need to process it as well
+            # (Only if gen_data is not None and samp has gen_input_ids)
+            if gen_data is not None and "gen_input_ids" in samp and len(samp["gen_input_ids"]) > 0:
+                gen_len = len(samp["gen_input_ids"])
+                gen_data["input_ids"][i, :gen_len] = torch.tensor(samp["gen_input_ids"], dtype=torch.long)
+                gen_data["attention_mask"][i, :gen_len] = 1.0
     
             # Process LM-related fields
             try:
@@ -137,5 +143,6 @@ class LMTrainDataset(Dataset):
                 raise RuntimeError(f"Error in _process_lm for sample {i}: {e}")
     
         return model_data, no_model_data, gen_data
+
     
     
