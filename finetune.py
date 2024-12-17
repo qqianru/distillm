@@ -276,9 +276,11 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
         dataset['train'], sampler=sampler, batch_size=args.batch_size, num_workers=args.num_workers, collate_fn=dataset["train"].collate
     )
 
+    n = 0
     for batch in train_dataloader:
-        print("Batch structure-train_dataloader:", batch)
-        break
+        print(f"Processing batch {n} in trained data, batch structure: {batch}")
+        n += 1
+    print("Finished processing all batches")
 
     if "pt_train" in dataset:
         if dp_world_size > 1:
