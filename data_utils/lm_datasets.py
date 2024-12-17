@@ -39,7 +39,7 @@ class LMTrainDataset(Dataset):
 
     def __len__(self):
         print("Initial self.num:", self.num)
-        print("Initial self.length:", len(self.data))
+        print("Initial self.length:", len(self.lm_ctx))
         return self.num
    
     def __getitem__(self, index):
