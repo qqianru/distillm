@@ -296,13 +296,9 @@ def finetune(args, tokenizer: AutoTokenizer, model: deepspeed.DeepSpeedEngine, o
     total_loss, total_distil_loss, total_time = 0.0, 0.0, 0.0
 
     adaptive_threshold = args.init_threshold if "adaptive" in args.type else None
-    print("tokenizer.padding_size before evluation:", tokenizer.padding_side)
     for batch in dataset["dev"]:
         print("Batch dataset_dev:", batch)
         break
-        
-    print("Dataset length:", len(dataset["train"]))
-    print("First sample:", dataset["train"][0])
     
     prev_avg_loss = evaluate(args, tokenizer, model, dataset["dev"], "dev", 0, device, adaptive_threshold)
     replay_buffer = ReplayBuffer(args)
