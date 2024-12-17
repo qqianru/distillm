@@ -87,48 +87,55 @@ class LMTrainDataset(Dataset):
         return model_data, no_model_data, gen_data
 
     def collate(self, samples):
-        # Filter out samples that have no tokens after tokenization
-        samples = [s for s in samples if len(s["input_ids"]) > 0]
+        # Filter out samples that have no tokens
+        samples = [s for s in samples if len(s.get("input_ids", [])) > 0]
     
-        # If no valid samples remain, handle accordingly (raise an error, return None, etc.)
+        # If no valid samples remain, raise an error or return None
         if not samples:
             raise ValueError("All samples in this batch are empty after tokenization.")
     
-        # Dynamically calculate the max_length from the remaining samples
-        max_length = max(len(samp["input_ids"]) for samp in samples)
+        # Dynamically calculate max_length
+        max_length = max(len(s["input_ids"]) for s in samples)
     
-        # Initialize with padding
+        # Initialize model_data
+        bs = len(samples)
         model_data = {
-            "input_ids": torch.ones(len(samples), max_length, dtype=torch.long) * self.pad_id,
-            "attention_mask": torch.zeros(len(samples), max_length),
-            "position_ids": torch.arange(max_length).unsqueeze(0).expand(len(samples), -1),
+            "input_ids": torch.ones(bs, max_length, dtype=torch.long) * self.pad_id,
+            "attention_mask": torch.zeros(bs, max_length),
+            "position_ids": torch.arange(max_length).unsqueeze(0).expand(bs, -1),
         }
     
-        # Initialize label-related data
         no_model_data = {
-            "label": torch.ones(len(samples), max_length, dtype=torch.long) * -100,
-            "loss_mask": torch.zeros(len(samples), max_length),
+            "label": torch.ones(bs, max_length, dtype=torch.long) * -100,
+            "loss_mask": torch.zeros(bs, max_length),
         }
     
-        # Dynamically calculate max_prompt_length for gen_data
-        max_prompt_length = max((len(samp.get("gen_input_ids", [])) for samp in samples), default=0)
-        gen_data = {
-            "input_ids": torch.ones(len(samples), max_prompt_length, dtype=torch.long) * self.pad_id,
-            "attention_mask": torch.zeros(len(samples), max_prompt_length, dtype=torch.long),
-        }
+        # Handle gen_data
+        max_prompt_length = max((len(s.get("gen_input_ids", [])) for s in samples), default=0)
+        if max_prompt_length > 0:
+            gen_data = {
+                "input_ids": torch.ones(bs, max_prompt_length, dtype=torch.long) * self.pad_id,
+                "attention_mask": torch.zeros(bs, max_prompt_length, dtype=torch.long),
+            }
+        else:
+            # If there's no prompt data, just make empty tensors with batch dimension
+            gen_data = {
+                "input_ids": torch.empty(bs, 0, dtype=torch.long),
+                "attention_mask": torch.empty(bs, 0, dtype=torch.long),
+            }
     
-        # Convert input_ids to tensors and fill model_data
-        input_ids = [torch.tensor(samp["input_ids"], dtype=torch.long) for samp in samples]
+        # Fill model_data
         for i, samp in enumerate(samples):
             seq_len = len(samp["input_ids"])
-            model_data["input_ids"][i, :seq_len] = input_ids[i]
-            model_data["attention_mask"][i, :seq_len] = 1
+            model_data["input_ids"][i, :seq_len] = torch.tensor(samp["input_ids"], dtype=torch.long)
+            model_data["attention_mask"][i, :seq_len] = 1.0
     
-            # Process language modeling related fields
+            # Process LM-related fields
             try:
                 self._process_lm(i, samp, model_data, no_model_data, gen_data)
             except Exception as e:
                 raise RuntimeError(f"Error in _process_lm for sample {i}: {e}")
     
         return model_data, no_model_data, gen_data
-
+    
+    
